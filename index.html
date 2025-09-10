@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Built-in Browser-based Babelfish</title>
+  </head>
+  <body>
+    <h1 class="title">Built-in Browser-based Babelfish</h1>
+    <main>
+      <div class="first">
+        <section class="setup">
+          <h2>Options</h2>
+        </section>
+        <section class="translator">
+          <form>
+            <div class="translation-box">
+              <label for="input-language">Input language</label>
+              <select id="input-language" class="language-select">
+                <option value="en" selected>English</option>
+                <option value="es">Spanish</option>
+              </select>
+              <textarea id="input" class="text-area"></textarea>
+            </div>
+
+            <div class="button-container">
+              <button type="button" class="listen-button button">
+                Start listening
+              </button>
+              <button type="button" class="record-button button">
+                Start recording
+              </button>
+              <button type="button" class="translate-button button" disabled>
+                Translate
+              </button>
+            </div>
+          </form>
+        </section>
+      </div>
+      <section class="conversation">
+        <div class="translation-box">
+          <output id="output"></output>
+        </div>
+      </section>
+    </main>
+    <script type="module" src="/src/script.js"></script>
+  </body>
+</html>

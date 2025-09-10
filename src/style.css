@@ -1,0 +1,167 @@
+:root {
+  --color-primary: #00ffff; /* Cyan accent */
+  --color-primary-dark: #00cccc; /* Darker cyan */
+  --color-background: #0a0f2c; /* Deep dark blue */
+  --color-surface: #141a3c; /* Slightly lighter dark blue for surfaces */
+  --color-text: #e0e0e0; /* Light grey/white for text */
+  --color-text-secondary: #a0a0e0; /* Lighter, slightly purplish grey */
+  --color-border: #00ffff; /* Cyan border, matching primary accent */
+
+  --spacing-sm: 8px;
+  --spacing-md: 12px;
+  --spacing-lg: 20px;
+  --spacing-xl: 2rem;
+
+  --border-radius: 3px; /* Slightly sharper edges */
+  --box-shadow: 0 0 12px rgba(0, 255, 255, 0.35); /* Cyan glow */
+  --font-family-main: "Roboto Mono", monospace, system-ui, -apple-system,
+    sans-serif; /* Futuristic font */
+}
+
+body {
+  font-family: var(--font-family-main);
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: var(--spacing-lg);
+  background-color: var(--color-background);
+  color: var(--color-text); /* Default text color for body */
+}
+h1,
+h2 {
+  margin: 0;
+  margin-bottom: var(--spacing-md);
+}
+ul {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+.title {
+  padding-top: var(--spacing-lg);
+  text-align: center;
+  color: var(--color-primary); /* Use accent for title */
+  margin-bottom: var(--spacing-xl);
+  text-shadow: 0 0 6px var(--color-primary); /* Add glow to title */
+}
+
+main .first {
+  display: flex;
+  flex-direction: row-reverse;
+  gap: var(--spacing-lg);
+}
+
+.setup {
+  width: 25%;
+}
+.translator {
+  flex-grow: 1;
+}
+
+.translator,
+.setup,
+.conversation {
+  background-color: var(--color-surface);
+  padding: var(--spacing-xl);
+  border-radius: var(--border-radius);
+  box-shadow: var(--box-shadow);
+  border: 1px solid var(--color-border); /* Add accent border to main container */
+  margin-bottom: var(--spacing-lg);
+}
+
+.language-select {
+  width: 220px;
+  padding: var(--spacing-md);
+  margin-bottom: var(--spacing-md);
+  border: 1px solid var(--color-border);
+  border-radius: var(--border-radius);
+  font-size: 15px; /* Slightly adjusted font size */
+  background-color: var(--color-surface);
+  color: var(--color-text);
+  font-family: inherit;
+  appearance: none; /* Remove default styling */
+  -webkit-appearance: none; /* For Safari */
+  -moz-appearance: none; /* For Firefox */
+  /* Custom dropdown arrow (cyan: %2300ffff) */
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%2300ffff'%3e%3cpath d='M7 10l5 5 5-5H7z'/%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-position: right var(--spacing-md) center;
+  background-size: 1em;
+  padding-right: calc(var(--spacing-md) + 1.5em); /* Space for arrow */
+}
+
+.text-area,
+output > p {
+  width: 100%;
+  min-height: 150px;
+  padding: var(--spacing-md);
+  border: 1px solid var(--color-border);
+  border-radius: var(--border-radius);
+  font-size: 16px;
+  font-family: inherit;
+  box-sizing: border-box;
+  background-color: var(--color-surface); /* Darker background for text area */
+  color: var(--color-text); /* Light text */
+  resize: vertical; /* Allow vertical resize */
+}
+
+output > p {
+  display: block;
+  background-color: var(
+    --color-background
+  ); /* Slightly different background for output */
+  border: 1px solid var(--color-border); /* Ensure border consistency */
+  color: var(--color-text); /* Ensure text color consistency */
+  /* Ensure padding and min-height are consistent if desired, or style uniquely */
+  min-height: auto;
+}
+
+.button-container {
+  text-align: center;
+  margin-top: var(--spacing-lg); /* Add some space above buttons */
+}
+
+.button {
+  background-color: transparent; /* Transparent background */
+  color: var(--color-primary); /* Accent color for text */
+  border: 2px solid var(--color-primary); /* Accent color border */
+  padding: var(--spacing-md) var(--spacing-lg);
+  border-radius: var(--border-radius);
+  font-size: 16px;
+  font-family: inherit;
+  cursor: pointer;
+  transition: background-color 0.3s, color 0.3s, box-shadow 0.3s;
+  text-transform: uppercase; /* More stylized text */
+  letter-spacing: 1.5px; /* Spaced out letters */
+  font-weight: 600; /* Bolder font for button */
+}
+
+.button:hover {
+  background-color: var(--color-primary); /* Fill with accent on hover */
+  color: var(--color-background); /* Dark text on hover for contrast */
+  box-shadow: 0 0 15px var(--color-primary); /* More intense glow on hover */
+}
+
+.button:disabled {
+  border-color: var(--color-text-secondary);
+  color: var(--color-text-secondary);
+  background-color: transparent;
+  cursor: not-allowed;
+  box-shadow: none;
+  text-shadow: none;
+}
+
+.button:disabled:hover {
+  background-color: transparent;
+  color: var(--color-text-secondary);
+  box-shadow: none;
+}
+
+label {
+  display: block;
+  margin-bottom: var(--spacing-sm);
+  color: var(--color-text-secondary);
+  font-size: 13px; /* Slightly smaller label */
+  text-transform: uppercase; /* Stylized label */
+  letter-spacing: 1px; /* Spaced out letters */
+}
