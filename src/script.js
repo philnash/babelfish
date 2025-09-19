@@ -112,44 +112,51 @@ window.addEventListener("DOMContentLoaded", async () => {
   speechSynthesis.onvoiceschanged = populateVoices;
 
   let transcriber = null;
-  initTranscriber((err, event) => {
-    if (err) {
-      console.error(err);
-      return;
-    }
-    if (event.type === "transcriber") {
-      transcriber = event.transcriber;
-      console.log("Transcriber initialized", transcriber);
-      initMediaRecorder(recordButton, async (err, recording) => {
-        if (err) {
-          console.error(err);
-          return;
-        }
-        const audioContext = new AudioContext();
-        const audioBuffer = await audioContext.decodeAudioData(
-          await recording.arrayBuffer()
-        );
-        console.log("transcribing audio", audioBuffer);
-        const transcription = await transcriber.prompt([
-          {
-            role: "user",
-            content: [
-              { type: "text", value: "Transcribe this short audio." },
-              { type: "audio", value: audioBuffer },
-            ],
-          },
-        ]);
+  recordButton.addEventListener("click", (event) => {
+    initTranscriber((err, event) => {
+      if (err) {
+        console.error(err);
+        return;
+      }
+      if (event.type === "transcriber") {
+        recordButton.textContent = "Start recording";
+        transcriber = event.transcriber;
+        console.log("Transcriber initialized", transcriber);
+        initMediaRecorder(recordButton, async (err, recording) => {
+          if (err) {
+            console.error(err);
+            return;
+          }
+          const audioContext = new AudioContext();
+          const audioBuffer = await audioContext.decodeAudioData(
+            await recording.arrayBuffer()
+          );
+          console.log("transcribing audio", audioBuffer);
+          const transcription = await transcriber.prompt([
+            {
+              role: "user",
+              content: [
+                { type: "audio", value: audioBuffer },
+                { type: "text", value: "Transcribe this short audio." },
+              ],
+            },
+          ]);
 
-        console.log("Transcription result:", transcription);
-        input.value = transcription;
-        translateAndSpeak();
+          console.log("Transcription result:", transcription);
+          input.value = transcription;
+          translateAndSpeak();
 
-        // const url = URL.createObjectURL(recording);
-        // const audio = document.createElement("audio");
-        // audio.controls = true;
-        // audio.src = url;
-        // output.appendChild(audio);
-      });
-    }
-  });
+          // const url = URL.createObjectURL(recording);
+          // const audio = document.createElement("audio");
+          // audio.controls = true;
+          // audio.src = url;
+          // output.appendChild(audio);
+        });
+      }
+      if (event.type === "downloadProgress") {
+        const { progress } = event;
+        recordButton.textContent = `Preparing to record... ${Math.round( progress.loaded * 100 )}%`;
+      }
+    });
+  }, { once: true });
 });
