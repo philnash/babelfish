@@ -5,11 +5,13 @@ This application is an example application that uses [browser built-in AI](https
 > [!WARNING]
 > This is experimental browser technology. If you want to build great server-side AI experiences, check out [Langflow](https://www.langflow.org/).
 
+## Learn more
+
+If you want to learn more, check out the [Chrome documentation on Built-in AI APIs](https://developer.chrome.com/docs/ai/built-in-apis) and this repo of [Web AI demos](https://github.com/GoogleChromeLabs/web-ai-demos).
+
 ## Running the application
 
 At the time of publishing, the best experience is in Chrome Canary with the right flags to enable [the Prompt API with multimodal capabilities](https://developer.chrome.com/docs/ai/prompt-api).
-
-
 
 Clone the application:
 
