@@ -61,18 +61,13 @@ async function translateAndSpeak() {
 
   const outputLang = inputLang === "en" ? "es" : "en";
   // set output text
+  console.log(translators);
   const translation = await translators[inputLang].translate(text);
   const outputText = document.createElement("p");
   outputText.textContent = translation;
   output.prepend(outputText);
   say(translation, voices[outputLang]);
 }
-
-// add event listener to form
-translateButton.addEventListener("click", async (event) => {
-  event.preventDefault();
-  translateAndSpeak();
-});
 
 window.addEventListener("DOMContentLoaded", async () => {
   initWebSpeechRecognition(startListeningBtn, inputLanguage, (err, result) => {
@@ -85,78 +80,99 @@ window.addEventListener("DOMContentLoaded", async () => {
     translateAndSpeak();
   });
 
-  Promise.all([
-    initTranslator("en", "es", (err, event) => {
-      if (err) {
-        console.error(err);
-        return;
-      }
-      if (event.type === "translator") {
-        translators["en"] = event.translator;
-      }
-    }),
-    initTranslator("es", "en", (err, event) => {
-      if (err) {
-        console.error(err);
-        return;
-      }
-      if (event.type === "translator") {
-        translators["es"] = event.translator;
-      }
-    }),
-  ]).then(() => {
-    translateButton.removeAttribute("disabled");
-  });
+  translateButton.addEventListener(
+    "click",
+    async (event) => {
+      Promise.all([
+        initTranslator("en", "es", (err, event) => {
+          if (err) {
+            console.error(err);
+            return;
+          }
+          if (event.type === "translator") {
+            translators["en"] = event.translator;
+          }
+        }),
+        initTranslator("es", "en", (err, event) => {
+          if (err) {
+            console.error(err);
+            return;
+          }
+          if (event.type === "translator") {
+            translators["es"] = event.translator;
+          }
+        }),
+      ])
+        .then(() => {
+          translateButton.removeAttribute("disabled");
+          translateButton.textContent = "Translate";
+          translateButton.addEventListener("click", async (event) => {
+            event.preventDefault();
+            translateAndSpeak();
+          });
+        })
+        .catch((err) => {
+          console.error("Error initializing translators:", err);
+        });
+    },
+    { once: true }
+  );
 
   populateVoices();
   speechSynthesis.onvoiceschanged = populateVoices;
 
   let transcriber = null;
-  recordButton.addEventListener("click", (event) => {
-    initTranscriber((err, event) => {
-      if (err) {
-        console.error(err);
-        return;
-      }
-      if (event.type === "transcriber") {
-        recordButton.textContent = "Start recording";
-        transcriber = event.transcriber;
-        console.log("Transcriber initialized", transcriber);
-        initMediaRecorder(recordButton, async (err, recording) => {
-          if (err) {
-            console.error(err);
-            return;
-          }
-          const audioContext = new AudioContext();
-          const audioBuffer = await audioContext.decodeAudioData(
-            await recording.arrayBuffer()
-          );
-          console.log("transcribing audio", audioBuffer);
-          const transcription = await transcriber.prompt([
-            {
-              role: "user",
-              content: [
-                { type: "audio", value: audioBuffer },
-                { type: "text", value: "Transcribe this short audio." },
-              ],
-            },
-          ]);
+  recordButton.addEventListener(
+    "click",
+    (event) => {
+      initTranscriber((err, event) => {
+        if (err) {
+          console.error(err);
+          return;
+        }
+        if (event.type === "transcriber") {
+          recordButton.textContent = "Start recording";
+          transcriber = event.transcriber;
+          console.log("Transcriber initialized", transcriber);
+          initMediaRecorder(recordButton, async (err, recording) => {
+            if (err) {
+              console.error(err);
+              return;
+            }
+            const audioContext = new AudioContext();
+            const audioBuffer = await audioContext.decodeAudioData(
+              await recording.arrayBuffer()
+            );
+            console.log("transcribing audio", audioBuffer);
+            const transcription = await transcriber.prompt([
+              {
+                role: "user",
+                content: [
+                  { type: "audio", value: audioBuffer },
+                  { type: "text", value: "Transcribe this short audio." },
+                ],
+              },
+            ]);
 
-          console.log("Transcription result:", transcription);
-          input.value = transcription;
-          translateAndSpeak();
+            console.log("Transcription result:", transcription);
+            input.value = transcription;
+            translateAndSpeak();
 
-          // const url = URL.createObjectURL(recording);
-          // const audio = document.createElement("audio");
-          // audio.controls = true;
-          // audio.src = url;
-          // output.appendChild(audio);
-        });
-      }
-      if (event.type === "downloadProgress") {
-        const { progress } = event;
-        recordButton.textContent = `Preparing to record... ${Math.round( progress.loaded * 100 )}%`;
-      }
-    });
-  }, { once: true });
+            // const url = URL.createObjectURL(recording);
+            // const audio = document.createElement("audio");
+            // audio.controls = true;
+            // audio.src = url;
+            // output.appendChild(audio);
+          });
+        }
+        if (event.type === "downloadProgress") {
+          const { progress } = event;
+          recordButton.textContent = `Preparing to record... ${Math.round(
+            progress.loaded * 100
+          )}%`;
+        }
+      });
+    },
+    { once: true }
+  );
 });
