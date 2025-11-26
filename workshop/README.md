@@ -22,7 +22,7 @@ You can run this application by opening `workshop/index.html` in Chrome.
 The `createLanguageDetector` function needs to do two things:
 
 - Check to see whether the `LanguageDetector` model is available in the browser with `LanguageDetector.availability()`
-- If it is, load the model with `LanguqageDetector.create()` and return it
+- If it is, load the model with `LanguageDetector.create()` and return it
 
 If the model is not available, the function should return `false`.
 
