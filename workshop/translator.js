@@ -1,37 +1,19 @@
 const errorMessage = "LanguageDetector is not available in this environment.";
 
 async function createLanguageDetector() {
-  if ("LanguageDetector" in window) {
-    const detectorAvailability = await LanguageDetector.availability();
-    if (detectorAvailability === "unavailable") {
-      return false;
-    }
-    const detector = await LanguageDetector.create();
-    return detector;
-  } else {
-    return false;
-  }
+  return false;
 }
 
 async function detectLanguage(text, detector) {
-  const detectedLanguages = await detector.detect(text);
-  return detectedLanguages[0].detectedLanguage;
+  return false;
 }
 
 async function translationAvailable(sourceLanguage, targetLanguage) {
-  const translatable = await Translator.availability({
-    sourceLanguage: sourceLanguage,
-    targetLanguage: targetLanguage,
-  });
-  return translatable !== "unavailable";
+  return false;
 }
 
 async function translate(text, sourceLanguage, targetLanguage) {
-  const translator = await Translator.create({
-    sourceLanguage,
-    targetLanguage,
-  });
-  return await translator.translate(text);
+  return "blah blah blah";
 }
 
 async function init() {
