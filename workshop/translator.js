@@ -4,12 +4,12 @@ async function createLanguageDetector() {
   if ("LanguageDetector" in window) {
     const detectorAvailability = await LanguageDetector.availability();
     if (detectorAvailability === "unavailable") {
-      throw new Error(errorMessage);
+      return false;
     }
     const detector = await LanguageDetector.create();
     return detector;
   } else {
-    throw new Error(errorMessage);
+    return false;
   }
 }
 
@@ -19,18 +19,11 @@ async function detectLanguage(text, detector) {
 }
 
 async function translationAvailable(sourceLanguage, targetLanguage) {
-  console.log({ sourceLanguage, targetLanguage });
   const translatable = await Translator.availability({
     sourceLanguage: sourceLanguage,
     targetLanguage: targetLanguage,
   });
-  console.log(translatable === "unavailable");
-  if (translatable === "unavailable") {
-    throw new Error(
-      `Translation not available for ${sourceLanguage} to ${targetLanguage}`
-    );
-  }
-  return true;
+  return translatable !== "unavailable";
 }
 
 async function translate(text, sourceLanguage, targetLanguage) {
@@ -44,16 +37,16 @@ async function translate(text, sourceLanguage, targetLanguage) {
 async function init() {
   const posts = document.querySelectorAll("article");
 
-  try {
-    const homeLanguage = navigator.languages[0].split("-")[0];
+  const homeLanguage = navigator.languages[0].split("-")[0];
 
-    const detector = await createLanguageDetector();
+  const detector = await createLanguageDetector();
 
+  if (detector) {
     posts.forEach((post) => {
       setupPost(post, detector, homeLanguage);
     });
-  } catch (error) {
-    console.log(error);
+  } else {
+    console.log(errorMessage);
   }
 }
 
@@ -63,6 +56,9 @@ async function setupPost(post, detector, homeLanguage) {
   const text = content.textContent;
 
   const detectedLanguage = await detectLanguage(text, detector);
+  if (!detectLanguage) {
+    return;
+  }
 
   const translatable = await translationAvailable(
     detectedLanguage,
